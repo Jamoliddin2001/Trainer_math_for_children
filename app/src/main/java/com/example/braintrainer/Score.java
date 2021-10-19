@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Score extends AppCompatActivity {
 
@@ -19,6 +20,7 @@ public class Score extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score);
         textViewScoreNow=findViewById(R.id.textViewScoreNow);
+        textViewScoreNow.setText("");
         Intent intent=getIntent();
         if(intent != null && intent.hasExtra("result")){
             int result=intent.getIntExtra("result",0);
@@ -33,5 +35,9 @@ public class Score extends AppCompatActivity {
     public void OnClickStartNewGame(View view) {
         Intent intent=new Intent(Score.this,MainActivity.class);
         startActivity(intent);
+    }
+
+    public void onClickimagedeveloper(View view) {
+        Toast.makeText(getApplicationContext(), "Developed by JAMOLIDDIN Sharipov", Toast.LENGTH_SHORT).show();
     }
 }

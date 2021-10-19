@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textViewQuestion;
     private TextView textViewTimer;
+    private TextView textViewTimerPlus;
     private TextView textViewScore;
     private TextView textView1;
     private TextView textView2;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private int max = 30;
     private int seconds;
     private boolean gameOver = false;
+    private boolean isRight=false;
+    private boolean isWrong=false;
+    private int time=20000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         textView2 = findViewById(R.id.textView2);
         textView3 = findViewById(R.id.textView3);
         textView4 = findViewById(R.id.textView4);
+        textViewTimerPlus=findViewById(R.id.textViewTimerPlus);
         options.add(textView1);
         options.add(textView2);
         options.add(textView3);
@@ -62,32 +67,7 @@ public class MainActivity extends AppCompatActivity {
         textViewScore.setText("Ответов: " + Integer.toString(countRightAnswers));
         playNext();
 
-        CountDownTimer timer=new CountDownTimer(20000,1000) {
-            @Override
-            public void onTick(long l) {
-                if(l<=6000){
-                    textViewTimer.setTextColor(Color.RED);
-                    textViewTimer.setTextSize(30);
-                }
-                textViewTimer.setText(getTime(l));
-            }
-
-            @Override
-            public void onFinish() {
-                SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                int max=preferences.getInt("max",0);
-                if(countRightAnswers >=max && wrongAnswer<30){
-                    preferences.edit().putInt("max",countRightAnswers).apply();
-                }
-                gameOver=true;
-                Intent intent=new Intent(MainActivity.this,Score.class);
-                intent.putExtra("result",countRightAnswers);
-                intent.putExtra("wrongAnswer",wrongAnswer);
-                startActivity(intent);
-            }
-        };
-        timer.start();
-
+        Time(time);
 
     }
 
@@ -149,9 +129,17 @@ public class MainActivity extends AppCompatActivity {
             String answer = textView.getText().toString();
             if (answer == Integer.toString(rightAnswer)) {
                 countRightAnswers++;
+                isRight=true;
+                textViewTimerPlus.setText("+1");
+                textViewTimerPlus.setVisibility(View.VISIBLE);
+                textViewTimerPlus.animate().alpha(0).setDuration(1500);
                 textViewScore.setText("Ответов: " + Integer.toString(countRightAnswers));
                 playNext();
             } else {
+                isWrong=true;
+                textViewTimerPlus.setText("-2");
+                textViewTimerPlus.setVisibility(View.VISIBLE);
+                textViewTimerPlus.animate().alpha(0).setDuration(1500);
                 wrongAnswer++;
                 textView.setTextColor(Color.RED);
             }
@@ -159,12 +147,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*private void Time(int timeCount) {
+    private void Time(int timeCount) {
 
         new CountDownTimer(timeCount, 1000) {
             @Override
             public void onTick(long l) {
-                if(timeCount<=5000)textViewTimer.setTextColor(Color.RED);
+                if(isRight){
+                    time=(int)l+1000;
+                    cancel();
+                    isRight=false;
+                    textViewTimerPlus.setAlpha(1);
+                    Time(time);
+                }
+                else if(isWrong){
+                    time=(int)l-3000;
+                    cancel();
+                    isWrong=false;
+                    Time(time);
+                }
+                textViewTimerPlus.animate().alpha(1).setDuration(10);
+                textViewTimerPlus.setVisibility(View.INVISIBLE);
+                if(l<=6000)textViewTimer.setTextColor(Color.RED);
+                else textViewTimer.setTextColor(Color.GREEN);
                 textViewTimer.setText(getTime(l));
             }
 
@@ -172,14 +176,15 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 int max = preferences.getInt("max", 0);
-                if (countRightAnswers >= max) {
+                if (countRightAnswers >= max && wrongAnswer<30) {
                     preferences.edit().putInt("max", countRightAnswers).apply();
                 }
                 gameOver = true;
                 Intent intent = new Intent(MainActivity.this, Score.class);
                 intent.putExtra("result", countRightAnswers);
+                intent.putExtra("wrongAnswer",wrongAnswer);
                 startActivity(intent);
             }
         }.start();
-    }*/
+    }
 }

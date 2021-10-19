@@ -11,6 +11,7 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
+        resValue("string", "ADMOB_ID", "ca-app-pub-3940256099942544~3347511713")   //vashniy;
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

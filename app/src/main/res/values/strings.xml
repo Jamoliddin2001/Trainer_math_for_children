@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">braintrainer</string>
+    <string name="app_name">Trainer-children</string>
+    <string name="rezultat">Ваш результат: 0</string>
+    <string name="start">НАЧАТЬ</string>
 </resources>
