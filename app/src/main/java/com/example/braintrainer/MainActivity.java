@@ -130,14 +130,14 @@ public class MainActivity extends AppCompatActivity {
             if (answer == Integer.toString(rightAnswer)) {
                 countRightAnswers++;
                 isRight=true;
-                textViewTimerPlus.setText("+1");
+                textViewTimerPlus.setText("+2");
                 textViewTimerPlus.setVisibility(View.VISIBLE);
                 textViewTimerPlus.animate().alpha(0).setDuration(1500);
                 textViewScore.setText("Ответов: " + Integer.toString(countRightAnswers));
                 playNext();
             } else {
                 isWrong=true;
-                textViewTimerPlus.setText("-2");
+                textViewTimerPlus.setText("-4");
                 textViewTimerPlus.setVisibility(View.VISIBLE);
                 textViewTimerPlus.animate().alpha(0).setDuration(1500);
                 wrongAnswer++;
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTick(long l) {
                 if(isRight){
-                    time=(int)l+1000;
+                    time=(int)l+3000;
                     cancel();
                     isRight=false;
                     textViewTimerPlus.setAlpha(1);
